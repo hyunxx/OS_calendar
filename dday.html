@@ -1,58 +1,96 @@
-<!DOCTYPE html> <!-- HTML5 문서임을 선언 -->
-<html lang="en"> <!-- 페이지 언어를 한국어로 지정 -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8"> <!-- 문자 인코딩을 UTF-8로 설정 -->
-  <title>D-Day 계산기</title> <!-- 브라우저 탭에 보이는 제목 -->
+  <meta charset="UTF-8">
+  <title>D-Day 계산기</title>
 </head>
 <body>
-  <h2>D-Day 계산기</h2> <!-- 화면에 표시되는 큰 제목 -->
+  <h2>D-Day 계산기</h2>
 
-  <!-- 날짜를 선택할 수 있는 입력창. 사용자가 날짜를 선택하면 이 값이 JS로 전달됨 -->
-  <input type="date" id="targetDate">
+  <!-- 제목 입력창 -->
+  <label for="title">디데이 제목: </label>
+  <input type="text" id="title" placeholder="예: 시험, 생일 등"><br><br>
 
-  <!-- 버튼을 누르면 calculateDday() 함수가 실행됨 -->
-  <button onclick="calculateDday()">계산</button>
+  <!-- 날짜 선택 -->
+  <label for="targetDate">날짜 선택: </label>
+  <input type="date" id="targetDate"><br><br>
 
-  <!-- 결과를 출력할 영역. JavaScript에서 이 영역의 텍스트를 변경함 -->
-  <p id="result"></p>
+  <!-- 디데이 추가 버튼 -->
+  <button onclick="addDday()">추가</button>
+
+  <hr>
+  <!-- 결과 목록 출력 -->
+  <ul id="resultList"></ul>
 
   <script>
-    // D-Day를 계산하는 함수
-    function calculateDday() {
-      // 사용자가 선택한 날짜 값을 가져옴 (yyyy-mm-dd 형식의 문자열)
-      const input = document.getElementById("targetDate").value;
+    // 디데이 목록 가져오기 또는 초기화
+    let ddayList = JSON.parse(localStorage.getItem("ddayList")) || [];
 
-      // 날짜를 선택하지 않았을 경우 메시지 출력 후 함수 종료
-      if (!input) {
-        document.getElementById("result").innerText = "날짜를 선택해주세요.";
-        return; // 함수 실행 중지
-      }
-
-      // 선택한 날짜와 오늘 날짜를 Date 객체로 생성
-      const target = new Date(input); // 목표 날짜
-      const today = new Date();       // 오늘 날짜
-
-      // 두 날짜 모두 시간 부분을 00:00:00으로 초기화 (시간 차이를 없애기 위해)
+    // 디데이 계산 함수
+    function getDdayMessage(title, dateStr) {
+      const target = new Date(dateStr);
+      const today = new Date();
       today.setHours(0, 0, 0, 0);
       target.setHours(0, 0, 0, 0);
 
-      // 두 날짜의 차이를 밀리초 단위로 계산
       const diff = target - today;
-
-      // 밀리초(ms)를 일(day) 단위로 변환하고 소수점 올림 처리
       const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-      // 결과 메시지 초기화
-      let result = "";
-
-      // 날짜 차이에 따라 결과 메시지를 설정
-      if (days > 0) result = `D-${days}`; // 미래 날짜
-      else if (days === 0) result = "D-DAY!"; // 오늘
-      else result = `D+${Math.abs(days)}`; // 과거 날짜
-
-      // 결과를 HTML의 <p> 영역에 출력
-      document.getElementById("result").innerText = result;
+      if (days > 0) return `${title} D-${days}`;
+      else if (days === 0) return `${title}, 오늘이 D-DAY!`;
+      else return `${title} D+${Math.abs(days)}`;
     }
+
+    // 디데이 추가 함수
+    function addDday() {
+      const title = document.getElementById("title").value.trim();
+      const date = document.getElementById("targetDate").value;
+
+      if (!title) {
+        alert("제목을 입력해주세요.");
+        return;
+      }
+      if (!date) {
+        alert("날짜를 선택해주세요.");
+        return;
+      }
+
+      // 새로운 디데이 추가
+      ddayList.push({ title, date });
+      localStorage.setItem("ddayList", JSON.stringify(ddayList));
+      renderList();
+
+      // 입력창 초기화
+      document.getElementById("title").value = "";
+      document.getElementById("targetDate").value = "";
+    }
+
+    // 디데이 목록을 화면에 표시
+    function renderList() {
+      const ul = document.getElementById("resultList");
+      ul.innerHTML = ""; // 기존 목록 초기화
+
+      ddayList.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.textContent = getDdayMessage(item.title, item.date);
+
+        // 삭제 버튼 추가
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "삭제";
+        deleteBtn.style.marginLeft = "10px";
+        deleteBtn.onclick = () => {
+          ddayList.splice(index, 1);
+          localStorage.setItem("ddayList", JSON.stringify(ddayList));
+          renderList();
+        };
+
+        li.appendChild(deleteBtn);
+        ul.appendChild(li);
+      });
+    }
+
+    // 페이지 로드 시 기존 목록 렌더링
+    window.onload = renderList;
   </script>
 </body>
 </html>
