@@ -151,15 +151,13 @@
         editable: true,
         selectable: true,
         selectMirror: true,
-        events: JSON.parse(localStorage.getItem('calendarEvents') || '[]'),
-
-        select(info) {
+        select: function(info) {
           selectInfo = info;
           activeEvent = null;
           showModal('일정 추가', info.startStr);
           document.getElementById('eventDate').style.display = 'none';
         },
-
+        events: JSON.parse(localStorage.getItem('calendarEvents') || '[]'),
         eventClick(info) {
           activeEvent = info.event;
           document.getElementById('viewTitle').textContent = activeEvent.title;
@@ -171,7 +169,6 @@
           document.getElementById('viewCategory').textContent = categoryMap[activeEvent.extendedProps.category] || '기타';
           document.getElementById('viewModal').style.display = 'block';
         },
-
         eventDrop: saveAll,
         eventResize: saveAll
       });
@@ -212,7 +209,17 @@
         const color = colorMap[category];
 
         if (selectInfo && title) {
-          calendar.addEvent({ title, description: desc, category, start: selectInfo.startStr, color });
+          const endDate = new Date(selectInfo.end);
+          endDate.setDate(endDate.getDate() - 1);
+          calendar.addEvent({
+            title,
+            description: desc,
+            category,
+            start: selectInfo.start,
+            end: selectInfo.end,
+            allDay: selectInfo.allDay,
+            color
+          });
         } else if (activeEvent) {
           activeEvent.setProp('title', title);
           activeEvent.setExtendedProp('description', desc);
@@ -254,7 +261,6 @@
       document.getElementById('addManualBtn').onclick = () => showModal('일정 직접 추가');
       document.getElementById('toggleDarkMode').onclick = () => document.body.classList.toggle('dark-mode');
 
-      // ✅ 오늘 할 일 (제목만 표시)
       document.getElementById('showTodayBtn').onclick = () => {
         const isSameDate = (d1, d2) =>
           d1.getFullYear() === d2.getFullYear() &&
