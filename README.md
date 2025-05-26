@@ -1,5 +1,4 @@
 # OS_calendar
-
 localhost 실행방법
 1. npm install (npm 먼저 설치 필수)
 2. npm run dev
