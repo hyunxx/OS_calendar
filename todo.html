@@ -1,75 +1,109 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8">
-  <title>날짜별 TO-DO LIST (저장됨)</title>
+    <meta charset="UTF-8">
+    <title>날짜별 TO-DO LIST (저장됨)</title>
+    <link rel="stylesheet" href="./src/main.css">
 </head>
+
 <body>
-  <h2>TO-DO LIST (날짜별)</h2>
+    <header class="header">
+    
+    </header>
+    <h2>TO-DO LIST (날짜별)</h2>
 
-  <input type="date" id="todoDate">
-  <input type="text" id="todoInput" placeholder="할 일 입력">
-  <button onclick="addTodo()">추가</button>
+    <input type="date" id="todoDate">
+    <input type="text" id="todoInput" placeholder="할 일 입력">
+    <button onclick="addTodo()">추가</button>
 
-  <div id="todoContainer"></div>
+    <div id="todoContainer"></div>
+    <div class="bottom-nav"></div>
 
-  <script>
-    // 날짜별 할 일 목록을 저장할 객체
-    let todos = {};
+    <script>
+      // 날짜별 할 일 목록을 저장할 객체
+      let todos = {};
 
-    // 저장소에서 데이터 불러오기
-    window.onload = function () {
-      const saved = localStorage.getItem('todos');
-      if (saved) {
-        todos = JSON.parse(saved);
-        renderTodos();
-      }
-    };
+          // 저장소에서 데이터 불러오기
+          window.onload = function () {
+            const saved = localStorage.getItem('todos');
+            if (saved) {
+              todos = JSON.parse(saved);
+              renderTodos();
+            }
+          };
 
-    function addTodo() {
-      const date = document.getElementById('todoDate').value;
-      const text = document.getElementById('todoInput').value.trim();
-      if (text === '' || date === '') return;
+          function addTodo() {
+            const date = document.getElementById('todoDate').value;
+            const text = document.getElementById('todoInput').value.trim();
+            if (text === '' || date === '') return;
 
-      // 날짜 키가 없다면 배열 생성
-      if (!todos[date]) {
-        todos[date] = [];
-      }
-      todos[date].push(text);
+          // 날짜 키가 없다면 배열 생성
+          if (!todos[date]) {
+            todos[date] = [];
+          }
+          todos[date].push(text);
 
-      // 저장소에 저장
-      localStorage.setItem('todos', JSON.stringify(todos));
+          // 저장소에 저장
+          localStorage.setItem('todos', JSON.stringify(todos));
 
-      // 다시 그리기
-      renderTodos();
+          // 다시 그리기
+          renderTodos();
 
-      // 입력창 초기화
-      document.getElementById('todoInput').value = '';
-    }
-
-    function renderTodos() {
-      const container = document.getElementById('todoContainer');
-      container.innerHTML = ''; // 기존 내용 비우기
-
-      for (const date in todos) {
-        const dateSection = document.createElement('div');
-        dateSection.id = `date-${date}`;
-
-        const heading = document.createElement('h3');
-        heading.textContent = date;
-        dateSection.appendChild(heading);
-
-        const ul = document.createElement('ul');
-        for (const task of todos[date]) {
-          const li = document.createElement('li');
-          li.textContent = task;
-          ul.appendChild(li);
+          // 입력창 초기화
+          document.getElementById('todoInput').value = '';
         }
 
-        dateSection.appendChild(ul);
-        container.appendChild(dateSection);
-      }
-    }
-  </script>
+          function renderTodos() {
+            const container = document.getElementById('todoContainer');
+            container.innerHTML = ''; // 기존 내용 비우기
+
+          for (const date in todos) {
+            const dateSection = document.createElement('div');
+            dateSection.id = `date-${date}`;
+
+              const heading = document.createElement('h3');
+              heading.textContent = date;
+              dateSection.appendChild(heading);
+
+              const ul = document.createElement('ul');
+              for (const task of todos[date]) {
+                const li = document.createElement('li');
+                li.textContent = task;
+                ul.appendChild(li);
+              }
+
+                      dateSection.appendChild(ul);
+                      container.appendChild(dateSection);
+                    }
+                  }
+                </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const bottomNav = document.querySelector('.bottom-nav');
+        const header = document.querySelector('.header');
+        if (bottomNav) {
+          fetch('nav_bottom.html')
+            .then(res => res.text())
+            .then(html => {
+              bottomNav.innerHTML = html;
+            });
+        } else {
+          console.warn('bottom-nav element not found');
+        }
+
+
+        if (header) {
+          fetch('header.html')
+            .then(res => res.text())
+            .then(html => {
+              header.innerHTML = html;
+            });
+        } else {
+          console.warn('header element not found');
+        }
+      });
+    </script>
 </body>
+
 </html>

@@ -1,86 +1,111 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>FullCalendar for Students</title>
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: Arial;
-      margin: 40px;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      transition: background-color 0.3s, color 0.3s;
-    }
-    #calendar { max-width: 900px; margin: 0 auto; }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.5);
-    }
-    .modal-content {
-      background-color: var(--modal-bg);
-      margin: 10% auto;
-      padding: 20px;
-      width: 320px;
-      border-radius: 10px;
-      color: var(--text-color);
-    }
-    .modal-content input, .modal-content textarea, .modal-content select {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    .modal-buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .modal-buttons button {
-      padding: 6px 12px;
-      flex: 1;
-    }
-    #viewModal .modal-content {
-      background-color: var(--modal-bg);
-      font-size: 15px;
-    }
-    #viewModal p, #todayTasksModal p {
-      margin: 6px 0;
-    }
-    #todayTasksModal ul {
-      padding-left: 20px;
-    }
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --modal-bg: #ffffff;
-    }
-    .dark-mode {
-      --bg-color: #1e1e1e;
-      --text-color: #ffffff;
-      --modal-bg: #2e2e2e;
-    }
-  </style>
-</head>
-<body>
-  <h1>🗓️ 캘린더</h1>
-  <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-    <button id="addManualBtn">➕ 일정 직접 추가</button>
-    <button id="showTodayBtn">📅 오늘 할 일</button>
-    <button id="toggleDarkMode">🌙 다크모드</button>
-  </div>
-  <div id="calendar"></div>
 
-  <!-- 일정 추가/수정 모달 -->
-  <div id="eventModal" class="modal">
-    <div class="modal-content">
-      <h3 id="modalTitle">일정 추가</h3>
-      <input type="date" id="eventDate" style="display: none;">
-      <input type="text" id="eventTitle" placeholder="제목">
-      <textarea id="eventDesc" rows="3" placeholder="내용"></textarea>
-      <select id="eventCategory">
+<head>
+    <meta charset="utf-8">
+    <title>FullCalendar for Students</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./src/main.css">
+    <style>
+      body {
+        font-family: Arial;
+        margin: 40px;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+      }
+        
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            background-color: var(--modal-bg);
+            margin: 10% auto;
+            padding: 20px;
+            width: 320px;
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+        
+        .modal-content input,
+        .modal-content textarea,
+        .modal-content select {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .modal-buttons button {
+            padding: 6px 12px;
+            flex: 1;
+        }
+        
+        #viewModal .modal-content {
+            background-color: var(--modal-bg);
+            font-size: 15px;
+        }
+        
+        #viewModal p,
+        #todayTasksModal p {
+            margin: 6px 0;
+        }
+        
+        #todayTasksModal ul {
+            padding-left: 20px;
+        }
+        
+         :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --modal-bg: #ffffff;
+        }
+        
+        .dark-mode {
+            --bg-color: #1e1e1e;
+            --text-color: #ffffff;
+            --modal-bg: #2e2e2e;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+    
+    </header>
+    <h1>🗓️ 캘린더</h1>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+      <button id="addManualBtn">➕ 일정 직접 추가</button>
+      <button id="showTodayBtn">📅 오늘 할 일</button>
+      <button id="toggleDarkMode">🌙 다크모드</button>
+    </div>
+    <div id="calendar"></div>
+
+    <!-- 일정 추가/수정 모달 -->
+    <div id="eventModal" class="modal">
+      <div class="modal-content">
+        <h3 id="modalTitle">일정 추가</h3>
+        <input type="date" id="eventDate" style="display: none;">
+        <input type="text" id="eventTitle" placeholder="제목">
+        <textarea id="eventDesc" rows="3" placeholder="내용"></textarea>
+        <select id="eventCategory">
         <option value="class">📘 수업</option>
         <option value="study">🔬 공부</option>
         <option value="assignment">📝 과제</option>
@@ -90,199 +115,246 @@
         <option value="social">🍕 약속</option>
         <option value="etc">🧩 기타</option>
       </select>
-      <div class="modal-buttons">
-        <button id="saveBtn" style="background-color: #bbffbb;">저장</button>
-        <button id="deleteBtn" style="background-color: #ffbbbb;">삭제</button>
-        <button id="cancelBtn">취소</button>
+            <div class="modal-buttons">
+              <button id="saveBtn" style="background-color: #bbffbb;">저장</button>
+              <button id="deleteBtn" style="background-color: #ffbbbb;">삭제</button>
+              <button id="cancelBtn">취소</button>
+            </div>
+            </div>
+            </div>
+
+    <!-- 일정 확인 모달 -->
+    <div id="viewModal" class="modal">
+      <div class="modal-content">
+        <h3>📌 일정 확인</h3>
+        <p><strong>제목:</strong> <span id="viewTitle"></span></p>
+        <p><strong>내용:</strong> <span id="viewDesc"></span></p>
+        <p><strong>카테고리:</strong> <span id="viewCategory"></span></p>
+        <div class="modal-buttons">
+          <button id="viewEdit" style="background-color:#bbffbb;">편집</button>
+          <button id="viewClose">닫기</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 일정 확인 모달 -->
-  <div id="viewModal" class="modal">
-    <div class="modal-content">
-      <h3>📌 일정 확인</h3>
-      <p><strong>제목:</strong> <span id="viewTitle"></span></p>
-      <p><strong>내용:</strong> <span id="viewDesc"></span></p>
-      <p><strong>카테고리:</strong> <span id="viewCategory"></span></p>
-      <div class="modal-buttons">
-        <button id="viewEdit" style="background-color:#bbffbb;">편집</button>
-        <button id="viewClose">닫기</button>
+    <!-- 삭제 확인 모달 -->
+    <div id="confirmModal" class="modal">
+      <div class="modal-content">
+        <p>정말 삭제하시겠습니까?</p>
+        <div class="modal-buttons">
+          <button id="confirmYes" style="background-color:#ffbbbb;">삭제</button>
+          <button id="confirmNo">취소</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 삭제 확인 모달 -->
-  <div id="confirmModal" class="modal">
-    <div class="modal-content">
-      <p>정말 삭제하시겠습니까?</p>
-      <div class="modal-buttons">
-        <button id="confirmYes" style="background-color:#ffbbbb;">삭제</button>
-        <button id="confirmNo">취소</button>
+    <!-- 오늘 일정 모달 -->
+    <div id="todayTasksModal" class="modal">
+      <div class="modal-content">
+        <h3>✅ 오늘의 일정</h3>
+        <ul id="todayTasksList"></ul>
+        <div class="modal-buttons">
+          <button onclick="document.getElementById('todayTasksModal').style.display='none'">닫기</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 오늘 일정 모달 -->
-  <div id="todayTasksModal" class="modal">
-    <div class="modal-content">
-      <h3>✅ 오늘의 일정</h3>
-      <ul id="todayTasksList"></ul>
-      <div class="modal-buttons">
-        <button onclick="document.getElementById('todayTasksModal').style.display='none'">닫기</button>
-      </div>
-    </div>
-  </div>
+    <div class="bottom-nav"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      let selectInfo = null;
-      let activeEvent = null;
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            let selectInfo = null;
+            let activeEvent = null;
 
-      const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-        initialView: 'dayGridMonth',
-        locale: 'ko',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,listWeek'
-        },
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        select: function(info) {
-          selectInfo = info;
-          activeEvent = null;
-          showModal('일정 추가', info.startStr);
-          document.getElementById('eventDate').style.display = 'none';
-        },
-        events: JSON.parse(localStorage.getItem('calendarEvents') || '[]'),
-        eventClick(info) {
-          activeEvent = info.event;
-          document.getElementById('viewTitle').textContent = activeEvent.title;
-          document.getElementById('viewDesc').textContent = activeEvent.extendedProps.description || '-';
-          const categoryMap = {
-            class: '📘 수업', study: '🔬 공부', assignment: '📝 과제', exam: '✏️ 시험',
-            club: '🏃 동아리', meeting: '📅 회의', social: '🍕 약속', etc: '🧩 기타'
+          const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: 'dayGridMonth',
+            locale: 'ko',
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            editable: true,
+            selectable: true,
+            selectMirror: true,
+            select: function (info) {
+              selectInfo = info;
+              activeEvent = null;
+              showModal('일정 추가', info.startStr);
+              document.getElementById('eventDate').style.display = 'none';
+            },
+            events: JSON.parse(localStorage.getItem('calendarEvents') || '[]'),
+            eventClick(info) {
+              activeEvent = info.event;
+              document.getElementById('viewTitle').textContent = activeEvent.title;
+              document.getElementById('viewDesc').textContent = activeEvent.extendedProps.description || '-';
+              const categoryMap = {
+                  class: '📘 수업',
+                  study: '🔬 공부',
+                  assignment: '📝 과제',
+                  exam: '✏️ 시험',
+                  club: '🏃 동아리',
+                  meeting: '📅 회의',
+                  social: '🍕 약속',
+                  etc: '🧩 기타'
+                };
+                document.getElementById('viewCategory').textContent = categoryMap[activeEvent.extendedProps.category] || '기타';
+                document.getElementById('viewModal').style.display = 'block';
+              },
+              eventDrop: saveAll,
+              eventResize: saveAll
+            });
+
+          calendar.render();
+
+          function showModal(title, dateStr = '') {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDesc').value = '';
+            document.getElementById('eventCategory').value = 'class';
+            document.getElementById('eventDate').value = dateStr;
+            document.getElementById('eventDate').style.display = dateStr ? 'none' : 'block';
+            document.getElementById('eventModal').style.display = 'block';
+          }
+
+          function saveAll() {
+            const current = calendar.getEvents().map(e => ({
+              title: e.title,
+              description: e.extendedProps.description || '',
+              category: e.extendedProps.category || '',
+              start: e.startStr,
+              end: e.endStr || null,
+              color: e.backgroundColor
+            }));
+            localStorage.setItem('calendarEvents', JSON.stringify(current));
+          }
+
+          document.getElementById('saveBtn').onclick = () => {
+            const title = document.getElementById('eventTitle').value.trim();
+            const desc = document.getElementById('eventDesc').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const category = document.getElementById('eventCategory').value;
+            const colorMap = {
+                class: '#007bff',
+                study: '#6f42c1',
+                assignment: '#dc3545',
+                exam: '#ffc107',
+                club: '#28a745',
+                meeting: '#20c997',
+                social: '#fd7e14',
+                etc: '#6c757d'
+              };
+              const color = colorMap[category];
+
+              if (selectInfo && title) {
+                const endDate = new Date(selectInfo.end);
+                endDate.setDate(endDate.getDate() - 1);
+                calendar.addEvent({
+                  title,
+                  description: desc,
+                  category,
+                  start: selectInfo.start,
+                  end: selectInfo.end,
+                  allDay: selectInfo.allDay,
+                  color
+                });
+              } else if (activeEvent) {
+                activeEvent.setProp('title', title);
+                activeEvent.setExtendedProp('description', desc);
+                activeEvent.setExtendedProp('category', category);
+                activeEvent.setProp('backgroundColor', color);
+              } else if (date && title) {
+                  calendar.addEvent({
+                    title,
+                    description: desc,
+                    category,
+                    start: date,
+                    color
+                  });
+                }
+
+              saveAll();
+              document.getElementById('eventModal').style.display = 'none';
+              document.getElementById('viewModal').style.display = 'none';
+              selectInfo = null;
+              activeEvent = null;
+            };
+
+          document.getElementById('deleteBtn').onclick = () => document.getElementById('confirmModal').style.display = 'block';
+
+          document.getElementById('confirmYes').onclick = () => {
+            if (activeEvent) activeEvent.remove();
+            saveAll();
+            ['confirmModal', 'eventModal', 'viewModal'].forEach(id => document.getElementById(id).style.display = 'none');
+            activeEvent = null;
           };
-          document.getElementById('viewCategory').textContent = categoryMap[activeEvent.extendedProps.category] || '기타';
-          document.getElementById('viewModal').style.display = 'block';
-        },
-        eventDrop: saveAll,
-        eventResize: saveAll
+
+          document.getElementById('confirmNo').onclick = () => document.getElementById('confirmModal').style.display = 'none';
+          document.getElementById('cancelBtn').onclick = () => document.getElementById('eventModal').style.display = 'none';
+          document.getElementById('viewClose').onclick = () => document.getElementById('viewModal').style.display = 'none';
+
+          document.getElementById('viewEdit').onclick = () => {
+            showModal('일정 수정', activeEvent.startStr.slice(0, 10));
+            document.getElementById('eventTitle').value = activeEvent.title;
+            document.getElementById('eventDesc').value = activeEvent.extendedProps.description;
+            document.getElementById('eventCategory').value = activeEvent.extendedProps.category;
+            document.getElementById('eventDate').style.display = 'block';
+            document.getElementById('viewModal').style.display = 'none';
+          };
+
+          document.getElementById('addManualBtn').onclick = () => showModal('일정 직접 추가');
+          document.getElementById('toggleDarkMode').onclick = () => document.body.classList.toggle('dark-mode');
+
+          document.getElementById('showTodayBtn').onclick = () => {
+            const isSameDate = (d1, d2) =>
+              d1.getFullYear() === d2.getFullYear() &&
+              d1.getMonth() === d2.getMonth() &&
+              d1.getDate() === d2.getDate();
+
+              const today = new Date();
+              const list = calendar.getEvents().filter(e => isSameDate(new Date(e.start), today));
+
+              const out = list.map(e => `<li>${e.title}</li>`).join('') || '<li>오늘 일정이 없습니다.</li>';
+              document.getElementById('todayTasksList').innerHTML = out;
+              document.getElementById('todayTasksModal').style.display = 'block';
+            };
+
+          window.onclick = e => {
+            if ([...document.getElementsByClassName('modal')].includes(e.target)) {
+              ['eventModal', 'viewModal', 'confirmModal', 'todayTasksModal'].forEach(id => document.getElementById(id).style.display = 'none');
+              selectInfo = null;
+              activeEvent = null;
+            }
+          };
+        });
+            </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const bottomNav = document.querySelector('.bottom-nav');
+        const header = document.querySelector('.header');
+        if (bottomNav) {
+          fetch('nav_bottom.html')
+            .then(res => res.text())
+            .then(html => {
+              bottomNav.innerHTML = html;
+            });
+        } else {
+          console.warn('bottom-nav element not found');
+        }
+
+
+        if (header) {
+          fetch('header.html')
+            .then(res => res.text())
+            .then(html => {
+              header.innerHTML = html;
+            });
+        } else {
+          console.warn('header element not found');
+        }
       });
-
-      calendar.render();
-
-      function showModal(title, dateStr = '') {
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('eventTitle').value = '';
-        document.getElementById('eventDesc').value = '';
-        document.getElementById('eventCategory').value = 'class';
-        document.getElementById('eventDate').value = dateStr;
-        document.getElementById('eventDate').style.display = dateStr ? 'none' : 'block';
-        document.getElementById('eventModal').style.display = 'block';
-      }
-
-      function saveAll() {
-        const current = calendar.getEvents().map(e => ({
-          title: e.title,
-          description: e.extendedProps.description || '',
-          category: e.extendedProps.category || '',
-          start: e.startStr,
-          end: e.endStr || null,
-          color: e.backgroundColor
-        }));
-        localStorage.setItem('calendarEvents', JSON.stringify(current));
-      }
-
-      document.getElementById('saveBtn').onclick = () => {
-        const title = document.getElementById('eventTitle').value.trim();
-        const desc = document.getElementById('eventDesc').value.trim();
-        const date = document.getElementById('eventDate').value;
-        const category = document.getElementById('eventCategory').value;
-        const colorMap = {
-          class: '#007bff', study: '#6f42c1', assignment: '#dc3545', exam: '#ffc107',
-          club: '#28a745', meeting: '#20c997', social: '#fd7e14', etc: '#6c757d'
-        };
-        const color = colorMap[category];
-
-        if (selectInfo && title) {
-          const endDate = new Date(selectInfo.end);
-          endDate.setDate(endDate.getDate() - 1);
-          calendar.addEvent({
-            title,
-            description: desc,
-            category,
-            start: selectInfo.start,
-            end: selectInfo.end,
-            allDay: selectInfo.allDay,
-            color
-          });
-        } else if (activeEvent) {
-          activeEvent.setProp('title', title);
-          activeEvent.setExtendedProp('description', desc);
-          activeEvent.setExtendedProp('category', category);
-          activeEvent.setProp('backgroundColor', color);
-        } else if (date && title) {
-          calendar.addEvent({ title, description: desc, category, start: date, color });
-        }
-
-        saveAll();
-        document.getElementById('eventModal').style.display = 'none';
-        document.getElementById('viewModal').style.display = 'none';
-        selectInfo = null;
-        activeEvent = null;
-      };
-
-      document.getElementById('deleteBtn').onclick = () => document.getElementById('confirmModal').style.display = 'block';
-
-      document.getElementById('confirmYes').onclick = () => {
-        if (activeEvent) activeEvent.remove();
-        saveAll();
-        ['confirmModal', 'eventModal', 'viewModal'].forEach(id => document.getElementById(id).style.display = 'none');
-        activeEvent = null;
-      };
-
-      document.getElementById('confirmNo').onclick = () => document.getElementById('confirmModal').style.display = 'none';
-      document.getElementById('cancelBtn').onclick = () => document.getElementById('eventModal').style.display = 'none';
-      document.getElementById('viewClose').onclick = () => document.getElementById('viewModal').style.display = 'none';
-
-      document.getElementById('viewEdit').onclick = () => {
-        showModal('일정 수정', activeEvent.startStr.slice(0, 10));
-        document.getElementById('eventTitle').value = activeEvent.title;
-        document.getElementById('eventDesc').value = activeEvent.extendedProps.description;
-        document.getElementById('eventCategory').value = activeEvent.extendedProps.category;
-        document.getElementById('eventDate').style.display = 'block';
-        document.getElementById('viewModal').style.display = 'none';
-      };
-
-      document.getElementById('addManualBtn').onclick = () => showModal('일정 직접 추가');
-      document.getElementById('toggleDarkMode').onclick = () => document.body.classList.toggle('dark-mode');
-
-      document.getElementById('showTodayBtn').onclick = () => {
-        const isSameDate = (d1, d2) =>
-          d1.getFullYear() === d2.getFullYear() &&
-          d1.getMonth() === d2.getMonth() &&
-          d1.getDate() === d2.getDate();
-
-        const today = new Date();
-        const list = calendar.getEvents().filter(e => isSameDate(new Date(e.start), today));
-
-        const out = list.map(e => `<li>${e.title}</li>`).join('') || '<li>오늘 일정이 없습니다.</li>';
-        document.getElementById('todayTasksList').innerHTML = out;
-        document.getElementById('todayTasksModal').style.display = 'block';
-      };
-
-      window.onclick = e => {
-        if ([...document.getElementsByClassName('modal')].includes(e.target)) {
-          ['eventModal', 'viewModal', 'confirmModal', 'todayTasksModal'].forEach(id => document.getElementById(id).style.display = 'none');
-          selectInfo = null;
-          activeEvent = null;
-        }
-      };
-    });
-  </script>
+    </script>
 </body>
+
 </html>
