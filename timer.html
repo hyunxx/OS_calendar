@@ -9,190 +9,185 @@
 </head>
 
 <body>
-    <div class="calendar">
+    <div class="timer-page">
         <header class="header">
-        
+
         </header>
         <h1>⏰타이머</h1>
-        
+
         <div>
-          <div class="input-container">
-            <div class="minute">
-              <laebl>minute (분)</laebl>
-              <input type="text" id="minute" />
-            </div>
+            <div class="input-container">
+                <div class="minute">
+                    <laebl>minute (분)</laebl>
+                    <input type="text" id="minute" />
+                </div>
                 <button type="button" id="start">Start</button>
                 <button type="button" id="pauseBtn">pause</button>
-                </div>
-                <div class="timer-container">
-                  <div id="timer" class="timer">
+            </div>
+            <div class="timer-container">
+                <div id="timer" class="timer">
                     <div class="cover1"></div>
                     <div id="lines">
                     </div>
-                
+
                     <div id="fins">
                     </div>
-                
+
                     <div id="num-container">
                     </div>
-                
+
                     <div class="cover2"></div>
-                  </div>
                 </div>
-                <div class="time-container">
-                  <div id="remain-time" class="remain-time"></div>
-                  <div id="total-time" class="total-time"></div>
-                </div>
-                </div>
-                </div>
-                
-                <script>
-                  document.addEventListener('DOMContentLoaded', () => {
-                    const bottomNav = document.querySelector('.bottom-nav');
-                    const header = document.querySelector('.header');
-                    if (bottomNav) {
-                      fetch('nav_bottom.html')
-                        .then(res => res.text())
-                        .then(html => {
-                          bottomNav.innerHTML = html;
-                        });
-                    } else {
-                      console.warn('bottom-nav element not found');
-                    }
+            </div>
+            <div class="time-container">
+                <div id="remain-time" class="remain-time"></div>
+                <div id="total-time" class="total-time"></div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-nav"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bottomNav = document.querySelector('.bottom-nav');
+            const header = document.querySelector('.header');
+            if (bottomNav) {
+                fetch('nav_bottom.html')
+                    .then(res => res.text())
+                    .then(html => {
+                        bottomNav.innerHTML = html;
+                    });
+            } else {
+                console.warn('bottom-nav element not found');
+            }
 
 
-                    if (header) {
-                      fetch('header.html')
-                        .then(res => res.text())
-                        .then(html => {
-                          header.innerHTML = html;
-                        });
-                    } else {
-                      console.warn('header element not found');
-                    }
-                  });
-                </script>
-                <script>
-                  const timer = document.getElementById('timer');
-                  const lines = timer.querySelector('#lines');
-                  const fins = timer.querySelector('#fins');
-                  const nums = timer.querySelector('#num-container');
-                  const control = document.querySelector('.button-container #control');
-                  const remainTime = document.querySelector('.time-container #remain-time');
-                  const totalTime = document.querySelector('.time-container #total-time');
-                  const start = document.querySelector('#start');
-                  const pauseBtn = document.querySelector('#pauseBtn');
-                  const minute = document.querySelector('#minute');
-                  let endTime = 0;
+            if (header) {
+                fetch('header.html')
+                    .then(res => res.text())
+                    .then(html => {
+                        header.innerHTML = html;
+                    });
+            } else {
+                console.warn('header element not found');
+            }
+        });
+    </script>
+    <script>
+        const timer = document.getElementById('timer');
+        const lines = timer.querySelector('#lines');
+        const fins = timer.querySelector('#fins');
+        const nums = timer.querySelector('#num-container');
+        const control = document.querySelector('.button-container #control');
+        const remainTime = document.querySelector('.time-container #remain-time');
+        const totalTime = document.querySelector('.time-container #total-time');
+        const start = document.querySelector('#start');
+        const pauseBtn = document.querySelector('#pauseBtn');
+        const minute = document.querySelector('#minute');
+        let endTime = 0;
 
 
-                  start.addEventListener('click', function () {
-                    endTime = minute.value;
-                    console.log(endTime);
-                    play();
-                  });
-                  pauseBtn.addEventListener('click', function () {
-                    pause();
-                  });
-                  let intervalID = null;
-                  let progressTimeSec = 0;
+        start.addEventListener('click', function() {
+            endTime = minute.value;
+            console.log(endTime);
+            play();
+        });
+        pauseBtn.addEventListener('click', function() {
+            pause();
+        });
+        let intervalID = null;
+        let progressTimeSec = 0;
 
-                  let isPlay = true;
+        let isPlay = true;
 
-                  function paintLines() {
-                    for (let i = 0; i < 30; i++) {
-                      const line = document.createElement('div');
-                      line.classList.add('line');
-                      line.style.transform = `rotate(${i * 6}deg)`;
+        function paintLines() {
+            for (let i = 0; i < 30; i++) {
+                const line = document.createElement('div');
+                line.classList.add('line');
+                line.style.transform = `rotate(${i * 6}deg)`;
 
-                      if (i % 5 == 0) {
-                        line.classList.add('thick')
-                      }
+                if (i % 5 == 0) {
+                    line.classList.add('thick')
+                }
 
-                      lines.append(line);
-                    }
-                  }
+                lines.append(line);
+            }
+        }
 
-                  function paintNumber() {
-                    let left = 15;
-                    let right = 45;
+        function paintNumber() {
+            for (let i = 0; i < 12; i++) {
+                const numBox = document.createElement('div');
+                numBox.classList.add('num-box');
 
-                    for (let i = 0; i < 6; i++) {
-                      const numBox = document.createElement('div');
-                      numBox.classList.add('num-box');
-                      numBox.style.transform = `rotate(${i * 30}deg)`;
+                const angle = i * 30 + 90; // 시계방향 30도 간격
+                const number = (i * 5) % 60;
 
-                      const spanLeft = document.createElement('span');
-                      const spanRight = document.createElement('span');
+                numBox.style.transform = `rotate(${angle}deg)`;
 
-                      const leftText = left - 5 * i;
-                      spanLeft.textContent = leftText < 0 ? 60 + leftText : leftText;
-                      spanRight.textContent = right - (5 * i);
+                const span = document.createElement('span');
+                span.textContent = number;
+                span.style.transform = `rotate(${-angle}deg)`; // 숫자는 다시 정방향으로 보이게
 
-                      spanLeft.style.transform = `rotate(${-30 * i}deg)`;
-                      spanRight.style.transform = `rotate(${-30 * i}deg)`;
+                numBox.appendChild(span);
+                nums.appendChild(numBox);
+            }
+        }
 
-                      numBox.append(spanLeft, spanRight);
-                      nums.append(numBox);
-                    }
-                  }
+        function paintRemainTime() {
+            for (let min = 0; min < endTime; min++) {
+                for (let sec = 0; sec < 60; sec++) {
+                    const remainFin = document.createElement('div');
+                    remainFin.classList.add('fin');
 
-                  function paintRemainTime() {
-                    for (let min = 0; min < endTime; min++) {
-                      for (let sec = 0; sec < 60; sec++) {
-                        const remainFin = document.createElement('div');
-                        remainFin.classList.add('fin');
+                    const deg = min * 6 + sec * 0.1;
+                    remainFin.style.transform = `rotate(${deg}deg)`
 
-                        const deg = min * 6 + sec * 0.1;
-                        remainFin.style.transform = `rotate(${-deg}deg)`
+                    fins.append(remainFin);
+                }
+            }
+        }
 
-                        fins.append(remainFin);
-                      }
-                    }
-                  }
+        function tickSec() {
+            progressTimeSec++;
+            if (progressTimeSec >= endTime * 60) pause();
 
-                  function tickSec() {
-                    progressTimeSec++;
-                    if (progressTimeSec >= endTime * 60) pause();
+            const lastFin = fins.lastChild;
 
-                    const lastFin = fins.lastChild;
+            if (lastFin) {
+                lastFin.remove();
+            }
 
-                    if (lastFin) {
-                      lastFin.remove();
-                    }
+            renderRemainTime();
+        }
 
-                    renderRemainTime();
-                  }
+        function play() {
+            progressTimeSec = 0;
+            fins.innerHTML = '';
+            paintRemainTime();
 
-                  function play() {
-                    progressTimeSec = 0;
-                    fins.innerHTML = '';
-                    paintRemainTime();
+            intervalID = setInterval(tickSec, 100);
+            isPlay = true;
+        }
 
-                    intervalID = setInterval(tickSec, 100);
-                    isPlay = true;
-                  }
+        function pause() {
+            clearInterval(intervalID);
+            isPlay = false;
+        }
 
-                  function pause() {
-                    clearInterval(intervalID);
-                    isPlay = false;
-                  }
+        function onClickControl() {
+            if (isPlay) {
+                pause();
 
-                  function onClickControl() {
-                    if (isPlay) {
-                      pause();
+            } else {
+                play();
+            }
+        }
 
-                    } else {
-                      play();
-                    }
-                  }
+        function renderRemainTime() {
+            const totalSec = endTime * 60 - progressTimeSec;
+            const min = Math.floor(totalSec / 60);
+            const sec = totalSec % 60;
 
-                  function renderRemainTime() {
-                    const totalSec = endTime * 60 - progressTimeSec;
-                    const min = Math.floor(totalSec / 60);
-                    const sec = totalSec % 60;
-
-                    remainTime.textContent = `${min < 10 ? `0${min}` : min} : ${sec < 10 ? `0${sec}` : sec}`;
+            remainTime.textContent = `${min < 10 ? `0${min}` : min} : ${sec < 10 ? `0${sec}` : sec}`;
                   }
 
                   function paintTime() {
@@ -219,7 +214,7 @@
                   if (remainTime && totalTime) {
                     paintTime();
                   }
-                </script>
+    </script>
 </body>
 
 </html>

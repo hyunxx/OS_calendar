@@ -9,125 +9,133 @@
 
 <body>
     <header class="header">
-    
+
     </header>
-    <h2>D-Day 계산기</h2>
+    <div class="dday-page">
+        <h2>D-Day 계산기</h2>
 
-    <!-- 제목 입력창 -->
-    <label for="title">디데이 제목: </label>
-    <input type="text" id="title" placeholder="예: 시험, 생일 등"><br><br>
+        <div class="input-container">
+            <div>
+                <!-- 제목 입력창 -->
+                <label for="title">디데이 제목: </label>
+                <input type="text" id="title" placeholder="예: 시험, 생일 등">
+            </div>
 
-    <!-- 날짜 선택 -->
-    <label for="targetDate">날짜 선택: </label>
-    <input type="date" id="targetDate"><br><br>
+            <div>
+                <!-- 날짜 선택 -->
+                <label for="targetDate">날짜 선택: </label>
+                <input type="date" id="targetDate">
+            </div>
 
-    <!-- 디데이 추가 버튼 -->
-    <button onclick="addDday()">추가</button>
+            <button onclick="addDday()">추가</button>
+        </div>
+        
 
-    <hr>
-    <!-- 결과 목록 출력 -->
-    <ul id="resultList"></ul>
+        <hr>
+        <!-- 결과 목록 출력 -->
+        <ul id="resultList"></ul>
+    </div>
     <div class="bottom-nav"></div>
 
 
     <script>
-      // 디데이 목록 가져오기 또는 초기화
-      let ddayList = JSON.parse(localStorage.getItem("ddayList")) || [];
+        // 디데이 목록 가져오기 또는 초기화
+        let ddayList = JSON.parse(localStorage.getItem("ddayList")) || [];
 
-          // 디데이 계산 함수
-          function getDdayMessage(title, dateStr) {
+        // 디데이 계산 함수
+        function getDdayMessage(title, dateStr) {
             const target = new Date(dateStr);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             target.setHours(0, 0, 0, 0);
 
-          const diff = target - today;
-          const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            const diff = target - today;
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-          if (days > 0) return `${title} D-${days}`;
-          else if (days === 0) return `${title}, 오늘이 D-DAY!`;
-          else return `${title} D+${Math.abs(days)}`;
+            if (days > 0) return `${title} D-${days}`;
+            else if (days === 0) return `${title}, 오늘이 D-DAY!`;
+            else return `${title} D+${Math.abs(days)}`;
         }
 
-          // 디데이 추가 함수
-          function addDday() {
+        // 디데이 추가 함수
+        function addDday() {
             const title = document.getElementById("title").value.trim();
             const date = document.getElementById("targetDate").value;
 
-          if (!title) {
-            alert("제목을 입력해주세요.");
-            return;
-          }
-          if (!date) {
-            alert("날짜를 선택해주세요.");
-            return;
-          }
+            if (!title) {
+                alert("제목을 입력해주세요.");
+                return;
+            }
+            if (!date) {
+                alert("날짜를 선택해주세요.");
+                return;
+            }
 
-          // 새로운 디데이 추가
-          ddayList.push({
-            title,
-            date
-          });
-          localStorage.setItem("ddayList", JSON.stringify(ddayList));
-          renderList();
+            // 새로운 디데이 추가
+            ddayList.push({
+                title,
+                date
+            });
+            localStorage.setItem("ddayList", JSON.stringify(ddayList));
+            renderList();
 
-          // 입력창 초기화
-          document.getElementById("title").value = "";
-          document.getElementById("targetDate").value = "";
+            // 입력창 초기화
+            document.getElementById("title").value = "";
+            document.getElementById("targetDate").value = "";
         }
 
-          // 디데이 목록을 화면에 표시
-          function renderList() {
+        // 디데이 목록을 화면에 표시
+        function renderList() {
             const ul = document.getElementById("resultList");
             ul.innerHTML = ""; // 기존 목록 초기화
 
-          ddayList.forEach((item, index) => {
-            const li = document.createElement("li");
-            li.textContent = getDdayMessage(item.title, item.date);
+            ddayList.forEach((item, index) => {
+                const li = document.createElement("li");
+                li.textContent = getDdayMessage(item.title, item.date);
 
-              // 삭제 버튼 추가
-              const deleteBtn = document.createElement("button");
-              deleteBtn.textContent = "삭제";
-              deleteBtn.style.marginLeft = "10px";
-              deleteBtn.onclick = () => {
-                ddayList.splice(index, 1);
-                localStorage.setItem("ddayList", JSON.stringify(ddayList));
-                renderList();
-              };
+                // 삭제 버튼 추가
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "삭제";
+                deleteBtn.style.marginLeft = "10px";
+                deleteBtn.onclick = () => {
+                    ddayList.splice(index, 1);
+                    localStorage.setItem("ddayList", JSON.stringify(ddayList));
+                    renderList();
+                };
 
-              li.appendChild(deleteBtn);
-              ul.appendChild(li);
+                li.appendChild(deleteBtn);
+                ul.appendChild(li);
             });
         }
 
-          // 페이지 로드 시 기존 목록 렌더링
-          window.onload = renderList;
-        </script>
+        // 페이지 로드 시 기존 목록 렌더링
+        window.onload = renderList;
+    </script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const bottomNav = document.querySelector('.bottom-nav');
-        const header = document.querySelector('.header');
-        if (bottomNav) {
-          fetch('nav_bottom.html')
-            .then(res => res.text())
-            .then(html => {
-              bottomNav.innerHTML = html;
-            });
-        } else {
-          console.warn('bottom-nav element not found');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const bottomNav = document.querySelector('.bottom-nav');
+            const header = document.querySelector('.header');
+            if (bottomNav) {
+                fetch('nav_bottom.html')
+                    .then(res => res.text())
+                    .then(html => {
+                        bottomNav.innerHTML = html;
+                    });
+            } else {
+                console.warn('bottom-nav element not found');
+            }
 
 
-        if (header) {
-          fetch('header.html')
-            .then(res => res.text())
-            .then(html => {
-              header.innerHTML = html;
-            });
-        } else {
-          console.warn('header element not found');
-        }
-      });
+            if (header) {
+                fetch('header.html')
+                    .then(res => res.text())
+                    .then(html => {
+                        header.innerHTML = html;
+                    });
+            } else {
+                console.warn('header element not found');
+            }
+        });
     </script>
 </body>
 
