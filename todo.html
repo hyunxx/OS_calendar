@@ -80,7 +80,10 @@
             const container = document.getElementById('todoContainer');
             container.innerHTML = '';
 
-            for (const date in todos) {
+          // ✅ 날짜(key)를 정렬
+          const sortedDates = Object.keys(todos).sort((a, b) => new Date(a) - new Date(b));
+
+          sortedDates.forEach(date => {
                 const dateSection = document.createElement('div');
                 dateSection.id = `date-${date}`;
 
@@ -122,7 +125,7 @@
 
                 dateSection.appendChild(ul);
                 container.appendChild(dateSection);
-            }
+            });
         }
 
         function removeTodo(date, id) {

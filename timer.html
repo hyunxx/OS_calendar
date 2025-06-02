@@ -23,6 +23,7 @@
                 </div>
                 <button type="button" id="start">Start</button>
                 <button type="button" id="pauseBtn">pause</button>
+                <button type="button" id="restart">restart</button>
             </div>
             <div class="timer-container">
                 <div id="timer" class="timer">
@@ -76,39 +77,73 @@
         const timer = document.getElementById('timer');
         const lines = timer.querySelector('#lines');
         const fins = timer.querySelector('#fins');
-        const nums = timer.querySelector('#num-container');
-        const control = document.querySelector('.button-container #control');
+          const nums = timer.querySelector('#num-container');
         const remainTime = document.querySelector('.time-container #remain-time');
         const totalTime = document.querySelector('.time-container #total-time');
         const start = document.querySelector('#start');
         const pauseBtn = document.querySelector('#pauseBtn');
-        const minute = document.querySelector('#minute');
-        let endTime = 0;
+          const restart = document.querySelector('#restart');
+          const minute = document.querySelector('#minute');
 
+          let endTime = 0; // 총 시간(분)
+          let intervalID = null;
+          let progressTimeSec = 0;
+          let isPlay = false;
 
-        start.addEventListener('click', function() {
-            endTime = minute.value;
-            console.log(endTime);
-            play();
+          // 초기 선과 숫자 표시
+          if (lines) paintLines();
+          if (nums) paintNumber();
+
+          start.addEventListener('click', () => {
+            endTime = parseInt(minute.value);
+            progressTimeSec = 0;
+            fins.innerHTML = '';
+            paintRemainTime();
+            intervalID = setInterval(tickSec, 1000);
+            isPlay = true;
+            paintTime();
         });
-        pauseBtn.addEventListener('click', function() {
-            pause();
-        });
-        let intervalID = null;
-        let progressTimeSec = 0;
 
-        let isPlay = true;
+  pauseBtn.addEventListener('click', () => pause());
+
+  restart.addEventListener('click', () => replay());
+
+  function play() {
+    intervalID = setInterval(tickSec, 1000);
+    isPlay = true;
+  }
+
+  function pause() {
+    clearInterval(intervalID);
+    isPlay = false;
+  }
+
+  function replay() {
+    clearInterval(intervalID);
+    fins.innerHTML = '';
+    paintRemainTime(progressTimeSec);
+    intervalID = setInterval(tickSec, 1000);
+    isPlay = true;
+  }
+
+  function tickSec() {
+    progressTimeSec++;
+    if (progressTimeSec >= endTime * 60) {
+      pause();
+              return;
+            }
+
+          const lastFin = fins.lastChild;
+          if (lastFin) lastFin.remove();
+          renderRemainTime();
+        }
 
         function paintLines() {
-            for (let i = 0; i < 30; i++) {
+          for (let i = 0; i < 60; i++) {
                 const line = document.createElement('div');
                 line.classList.add('line');
                 line.style.transform = `rotate(${i * 6}deg)`;
-
-                if (i % 5 == 0) {
-                    line.classList.add('thick')
-                }
-
+              if (i % 5 === 0) line.classList.add('thick');
                 lines.append(line);
             }
         }
@@ -117,68 +152,33 @@
             for (let i = 0; i < 12; i++) {
                 const numBox = document.createElement('div');
                 numBox.classList.add('num-box');
-
-                const angle = i * 30 + 90; // 시계방향 30도 간격
+              const angle = i * 30 - 90;
                 const number = (i * 5) % 60;
 
                 numBox.style.transform = `rotate(${angle}deg)`;
 
                 const span = document.createElement('span');
                 span.textContent = number;
-                span.style.transform = `rotate(${-angle}deg)`; // 숫자는 다시 정방향으로 보이게
+              span.style.transform = `rotate(${-angle}deg)`;
 
                 numBox.appendChild(span);
                 nums.appendChild(numBox);
             }
         }
 
-        function paintRemainTime() {
-            for (let min = 0; min < endTime; min++) {
-                for (let sec = 0; sec < 60; sec++) {
-                    const remainFin = document.createElement('div');
-                    remainFin.classList.add('fin');
+          function paintRemainTime(startFromSec = 0) {
+            const totalSec = endTime * 60;
+            const remainSec = totalSec - startFromSec;
 
-                    const deg = min * 6 + sec * 0.1;
-                    remainFin.style.transform = `rotate(${deg}deg)`
+            for (let i = 0; i < remainSec; i++) {
+              const remainFin = document.createElement('div');
+              remainFin.classList.add('fin');
 
-                    fins.append(remainFin);
-                }
-            }
-        }
+              // 기준점 보정: 항상 0도에서 시작되도록
+              const deg = i * 0.1;
+              remainFin.style.transform = `rotate(${deg}deg)`;
 
-        function tickSec() {
-            progressTimeSec++;
-            if (progressTimeSec >= endTime * 60) pause();
-
-            const lastFin = fins.lastChild;
-
-            if (lastFin) {
-                lastFin.remove();
-            }
-
-            renderRemainTime();
-        }
-
-        function play() {
-            progressTimeSec = 0;
-            fins.innerHTML = '';
-            paintRemainTime();
-
-            intervalID = setInterval(tickSec, 100);
-            isPlay = true;
-        }
-
-        function pause() {
-            clearInterval(intervalID);
-            isPlay = false;
-        }
-
-        function onClickControl() {
-            if (isPlay) {
-                pause();
-
-            } else {
-                play();
+              fins.append(remainFin);
             }
         }
 
@@ -186,35 +186,15 @@
             const totalSec = endTime * 60 - progressTimeSec;
             const min = Math.floor(totalSec / 60);
             const sec = totalSec % 60;
+          remainTime.textContent = `${min < 10 ? '0' + min : min} : ${sec < 10 ? '0' + sec : sec}`;
+        }
 
-            remainTime.textContent = `${min < 10 ? `0${min}` : min} : ${sec < 10 ? `0${sec}` : sec}`;
-                  }
+          function paintTime() {
+            renderRemainTime();
+            totalTime.textContent = `(${endTime} : 00)`;
+          }
+</script>
 
-                  function paintTime() {
-                    renderRemainTime();
-                    totalTime.textContent = `(${endTime} : 00)`;
-                  }
-
-                  if (lines) {
-                    paintLines();
-                  }
-
-                  if (nums) {
-                    paintNumber();
-                  }
-
-                  if (fins) {
-                    paintRemainTime();
-                  }
-
-                  if (control) {
-                    control.addEventListener('click', onClickControl);
-                  }
-
-                  if (remainTime && totalTime) {
-                    paintTime();
-                  }
-    </script>
 </body>
 
 </html>

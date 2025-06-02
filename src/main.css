@@ -15,6 +15,14 @@ a {
     text-decoration: unset;
 }
 
+.dark-mode {
+    background: #000;
+}
+
+.dark-mode a {
+    color: #fff;
+}
+
 a:hover {
     color: #000;
     font-weight: 700;
@@ -94,9 +102,8 @@ header h1 {
     text-align: center;
     background: #BEE4F4;
     position: absolute;
-    left: calc(50% + 20px);
     bottom: 0;
-    transform: translateX(-50%);
+    height: 50px;
 }
 
 #nav_bottom a {
@@ -249,6 +256,12 @@ header h1 {
 #calendar {
     max-width: 900px;
     margin: 0 auto;
+}
+
+.calendar-page {
+    overflow: scroll;
+    padding: 0 0 10px;
+    height: calc(100% - 110px)
 }
 
 .modal {

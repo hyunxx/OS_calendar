@@ -29,7 +29,7 @@
 
             <button onclick="addDday()">추가</button>
         </div>
-        
+
 
         <hr>
         <!-- 결과 목록 출력 -->
@@ -89,6 +89,8 @@
             const ul = document.getElementById("resultList");
             ul.innerHTML = ""; // 기존 목록 초기화
 
+          ddayList.sort((a, b) => new Date(a.date) - new Date(b.date));
+
             ddayList.forEach((item, index) => {
                 const li = document.createElement("li");
                 li.textContent = getDdayMessage(item.title, item.date);
@@ -107,6 +109,7 @@
                 ul.appendChild(li);
             });
         }
+
 
         // 페이지 로드 시 기존 목록 렌더링
         window.onload = renderList;
