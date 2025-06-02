@@ -104,32 +104,32 @@
             paintTime();
         });
 
-  pauseBtn.addEventListener('click', () => pause());
+          pauseBtn.addEventListener('click', () => pause());
 
-  restart.addEventListener('click', () => replay());
+          restart.addEventListener('click', () => replay());
 
-  function play() {
-    intervalID = setInterval(tickSec, 1000);
-    isPlay = true;
-  }
+          function play() {
+            intervalID = setInterval(tickSec, 1000);
+            isPlay = true;
+          }
 
-  function pause() {
-    clearInterval(intervalID);
-    isPlay = false;
-  }
+          function pause() {
+            clearInterval(intervalID);
+            isPlay = false;
+          }
 
-  function replay() {
-    clearInterval(intervalID);
-    fins.innerHTML = '';
-    paintRemainTime(progressTimeSec);
-    intervalID = setInterval(tickSec, 1000);
-    isPlay = true;
-  }
+          function replay() {
+            clearInterval(intervalID);
+            fins.innerHTML = '';
+            paintRemainTime(progressTimeSec);
+            intervalID = setInterval(tickSec, 1000);
+            isPlay = true;
+          }
 
-  function tickSec() {
-    progressTimeSec++;
-    if (progressTimeSec >= endTime * 60) {
-      pause();
+          function tickSec() {
+            progressTimeSec++;
+            if (progressTimeSec >= endTime * 60) {
+              pause();
               return;
             }
 
@@ -152,7 +152,7 @@
             for (let i = 0; i < 12; i++) {
                 const numBox = document.createElement('div');
                 numBox.classList.add('num-box');
-              const angle = i * 30 - 90;
+              const angle = i * 30 + 90;
                 const number = (i * 5) % 60;
 
                 numBox.style.transform = `rotate(${angle}deg)`;
@@ -193,7 +193,7 @@
             renderRemainTime();
             totalTime.textContent = `(${endTime} : 00)`;
           }
-</script>
+        </script>
 
 </body>
 
