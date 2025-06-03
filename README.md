@@ -10,3 +10,5 @@ localhost 실행방법
 3. merge 시에는 단톡에 알리기
 4. 각자 작업은 각자 브랜치 만들어서 진행
 5. 커밋시에는 커밋 메세지 간단하게 꼭 적기!!
+
+## user guide / developer guide 는 index.html 파일에 명시되어 있으며, 웹에서도 확인 가능합니다.
